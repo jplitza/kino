@@ -95,7 +95,7 @@ nav.events li.new a {
 }
 
 a.movie_info {
-    background-image: url('/static/images/information.png');
+    background-image: url('images/information.png');
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
