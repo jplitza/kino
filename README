@@ -1,0 +1,15 @@
+Diese Anwendung soll dazu dienen, für gemeinsame Filme-Abende einen Film zu
+finden, den möglichst viele sehen möchten.
+
+Wann ein solcher Filme-Abend stattfindet, wird aus einer ICS-Datei gelesen,
+deren URL in der config.py angegeben werden kann (siehe config.sample.py). Neue
+Termine werden eingelesen und alte gestrichen, wenn
+
+    python runtask.py update_events
+
+ausgeführt wird. Um andere Teilnehmer über neue Termine oder abgesagte bereits
+angekündigte Termine zu informieren, versendet der Befehl
+
+    python runtask.py write_mails
+
+E-Mails an die in der config.py eingestellten Empfänger.

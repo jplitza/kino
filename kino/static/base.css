@@ -1,0 +1,139 @@
+body {
+    padding: 8px;
+    margin: 0;
+}
+
+header {
+    margin: -8px -8px 20px -8px;
+    padding: 8px;
+    background-color: #fafafa;
+    background-image: linear-gradient(to bottom, #fff, #f2f2f2);
+    background-repeat: repeat-x;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #d4d4d4;
+}
+
+h1 {
+    font-size: 20pt;
+    font-weight: bold;
+    margin: 0;
+}
+
+h2 {
+    font-size: 16pt;
+}
+
+.current_user {
+    display: block;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 80%;
+}
+
+nav.events ul {
+    margin: 0;
+    padding: 0;
+}
+nav.events li {
+    display: inline-block;
+}
+
+nav.events li a {
+    display: block;
+    width: 3.5em;
+    text-align: center;
+    padding: 3px;
+    margin: 2px;
+    border: 1px solid #356AA0;
+    border-radius: 10px;
+    background-color: #C3D9FF;
+    color: #000;
+    text-decoration: none;
+}
+
+nav.events li.current a {
+    background-color: hsl(79, 71%, 80%);
+    border-color: hsl(79, 71%, 40%);
+    border-width: 3px;
+    margin: 0;
+}
+
+nav.events li.new a {
+    background-color: hsl(0, 71%, 80%);
+    border-color: hsl(0, 71%, 40%);
+}
+
+.canceled {
+    color: red;
+    font-weight: bold;
+}
+
+.hidden, .movie_info_container {
+    display: none;
+}
+
+#movies {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#movies thead, #movies tfoot {
+    background-color: #f2f2f2;
+}
+#movies td, #movies th {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 7px;
+    width: 1em;
+}
+#movies td:last-of-type, #movies th:last-of-type {
+    width: auto;
+}
+#movies tr.voted td {
+    background-color: hsl(79, 71%, 80%);
+}
+
+a.movie_info {
+    background-image: url('/static/images/information.png');
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+
+    /* hide text */
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#movies tr.movie_info {
+    font-size: 85%;
+}
+
+#movies tr.movie_info td {
+    padding: 0;
+}
+
+#movies tr.movie_info td .poster {
+    float: right;
+    height: 150px;
+}
+
+#movies tr.movie_info td .movie_info_container {
+    padding: 7px;
+    margin: 0;
+}
+
+#movies tr.movie_info td .movie_info_container dl {
+    margin: 0;
+}
+
+#movies tr.movie_info td .movie_info_container dt:after {
+    content: ':';
+}
+
+#movies input[type=text] {
+    width: 100%;
+    border: 0;
+}

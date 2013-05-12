@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Startseite{% endblock %}
+{% block content %}
+<p>Hallo, {{ g.user.name }}! Bitte wähle oben einen Termin, für den du
+abstimmen möchtest. Neue Termine, für die du noch nicht abgestimmt hast, werden
+in rot angezeigt.</p>
+
+<p>Zur Verwendung:  Wenn zu einem Termin noch nicht für einen Film abgestimmt
+wurde, kannst du ihn durch Eintippen eines Teils des Filmtitels in das
+Eingabefeld in der letzten Zeile suchen und hinzufügen. Es kann nur für Filme
+abgestimmt werden, die bereits vorliegen (also in der XBMC-Datenbank sind).
+Falls du unbedingt einen Film sehen möchtest, der noch nicht vorliegt, wende
+dich vertrauensvoll an die Ausrichter.</p>
+{% endblock %}

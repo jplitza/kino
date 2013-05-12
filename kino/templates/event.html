@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block title %}{{ event.date.strftime('%d.%m.%Y %H:%M') }}{% endblock %}
+{% block content %}
+<h2>{{ event.date.strftime('%A, %d.%m.%Y %H:%M') }}</h2>
+{% if event.canceled %}
+<p class="canceled">Dieses Event wurde abgesagt!</p>
+{% else %}
+<form action="{{ url_for('vote') }}" method="post">
+<input type="hidden" name="event_id" value="{{ event.id }}">
+{% endif %}
+<table id="movies">
+    <thead>
+    <tr>
+        {% if not event.canceled %}<th></th>{% endif %}
+        <th>#</th>
+        <th></th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for movie in event.movies %}
+    <tr{% if movie.voted %} class="voted"{% endif %}>
+        {% if not event.canceled %}<td><input type="checkbox" name="movies[]" id="movie_{{movie.id}}" value="{{ movie.id }}"{% if movie.voted %} checked="checked"{% endif %}></td>{% endif %}
+        <td>{{movie.count}}</td>
+        <td><a href="{{ url_for('movie_info', id=movie.id) }}" class="movie_info">Info</a></td>
+        <td><label for="movie_{{movie.id}}">{{ movie.name|e }} ({{ movie.year }})</label></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    {% if not event.canceled %}
+    <tfoot>
+        <tr>
+            <td><input type="checkbox" checked="checked" readonly="readonly" disabled="disabled" /></td>
+            <td colspan="3"><input type="text" id="movie_name" placeholder="Neuer Film"></td>
+        </tr>
+    </tfoot>
+    {% endif %}
+</table>
+{% if not event.canceled %}
+<input type="submit" value="Abstimmen">
+</form>
+{% endif %}
+
+Stimmen bisher: {{event.users|set|length}}{% if g.user in event.users %} (inklusive deiner){% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+Hallo zusammen,
+
+{% if new_events.count() > 0 %}
+{%if new_events.count() == 1 %}
+{% set event = new_events.first() %}
+es steht ein neuer Filmtheater-Termin am {{ event.date.strftime('%d.%m.%Y um %H:%M Uhr') }} an!
+Stimmt ab, welchen Film wir sehen, unter {{ url_for('event', id=event.id, _external=True) }}.{% else %}
+es stehen einige neue Filmtheater-Termine an:
+
+{% for event in new_events %}
+ * {{ event.date.strftime('%d.%m.%Y um %H:%M Uhr') }} ({{url_for('event', id=event.id, _external=True)}})
+{% endfor %}
+
+Stimmt unter den oben angegebenen Links ab, welchen Film wir jeweils sehen!
+{% endif %}
+
+{% endif %}
+{% if canceled_events.count() > 0 %}
+Leider {% if canceled_events.count() > 1 %}
+fallen {% if new_events.count() > 0 %}auch {% endif %}einige {% if new_events.count() == 0 %}Filmtheater-{% endif %}Termine{% else %}
+fällt {% if new_events.count() > 0 %}auch {% endif %}ein {% if new_events.count() == 0 %}Filmtheater-{% endif %}Termin{% endif %}
+ aus:
+
+{% for event in canceled_events %}
+ * {{ event.date.strftime('%d.%m.%Y um %H:%M Uhr') }}
+{% endfor %}
+
+{% endif %}
+Bis zum nächsten Treffen! :-)

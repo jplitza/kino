@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}
+        <title>Filmtheater: {% block title %}{% endblock %}</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width">
+        <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        <script src="{{ url_for('static', filename='base.js') }}"></script>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='base.css') }}" />
+        {% endblock %}
+    </head>
+    <body>
+        <header>
+            <h1>Filmtheater</h1>
+            <span class="current_user">(eingeloggt als {{g.user.name}})</span>
+            <nav class="events">
+                <ul>
+                    {% for menuevent in g.events %}
+                    <li
+                    {% if event and event.id == menuevent.id %}
+                        class="current"
+                    {% elif g.user not in menuevent.users %}
+                        class="new"
+                    {% endif %}
+                    ><a href="{{ url_for('event', id=menuevent.id) }}">{{ menuevent.date.strftime("%d.%m. %H:%M") }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </header>
+        <div id="body">
+            <div id="content" class="container">
+                {% block content %}{% endblock %}
+            </div>
+            <div class="clear"></div>
+        </div>
+    </body>
+</html>
+

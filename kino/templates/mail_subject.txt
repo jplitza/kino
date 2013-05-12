@@ -1,0 +1,9 @@
+{%if new > 0 %}
+{{new}} neue{%if new==1%}r{%endif%} {%endif%}
+{%if new > 0 and canceled > 0 %}
+und {%endif%}
+{%if canceled > 0%}
+{{canceled}} abgesagte{%if canceled==1%}r{%endif%} {%endif%}
+{%if (canceled == 0 and new > 1) or canceled > 1 %}
+Termine{%else%}
+Termin{%endif%}
