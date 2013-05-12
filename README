@@ -5,11 +5,39 @@ Wann ein solcher Filme-Abend stattfindet, wird aus einer ICS-Datei gelesen,
 deren URL in der config.py angegeben werden kann (siehe config.sample.py). Neue
 Termine werden eingelesen und alte gestrichen, wenn
 
-    python runtask.py update_events
+    ./runtask.py update_events
 
 ausgeführt wird. Um andere Teilnehmer über neue Termine oder abgesagte bereits
 angekündigte Termine zu informieren, versendet der Befehl
 
-    python runtask.py write_mails
+    ./runtask.py write_mails
 
 E-Mails an die in der config.py eingestellten Empfänger.
+
+Installation
+============
+Um alle Abhängigkeiten zu installieren, führe folgendes als root aus:
+
+    pip install Flask Flask-SQLAlchemy Flask-Script Flask-Mail vobject MySQL-python
+
+Falls eine andere Datenbank als MySQL benutzt werden soll, muss außerdem noch
+das entsprechende Modul installiert werden, beispielsweise
+
+    pip install pysqlite
+
+Um die Anwendung als FastCGI-Server zu betreiben wird außerdem Flup benötigt:
+
+    pip install flup
+
+Konfiguration
+=============
+Die Datei config.sample.py sollte veranschaulichen, wie die Anwendung
+konfiguriert wird. Außerdem können dort alle Optionen, die Flask selbst
+versteht, untergebracht werden, siehe dazu http://flask.pocoo.org/docs/config/
+
+Wie man die Anwendung in einen Webserver einbindet ist unter
+http://flask.pocoo.org/docs/deploying/fastcgi/ nachzulesen.
+
+Um die Anwendung als Stand-Alone-Server laufen zu lassen, genügt der Aufruf von
+
+    ./runtask.py runserver
