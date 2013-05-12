@@ -1,3 +1,7 @@
+// the application root is determined automatically later on (after the document has loaded)
+// it will always contain a trailing slash
+APPLICATION_ROOT = '/'
+
 function movie_info() {
     var movie_id = this.href.match(/\d+$/)[0]
     var movie_info = $('#movie_info_' + movie_id);
@@ -45,9 +49,21 @@ function stop_propagation(ev) {
 }
 
 $(function() {
+    // determine application prefix
+    var root_regex = /(.*\/)?static\/base.js$/
+    $('script').each(function() {
+        var position = this.src.indexOf(location.host);
+        if(position >= 0) {
+            var matched = root_regex.exec(
+                this.src.substr(position+location.host.length)
+            );
+            APPLICATION_ROOT = matched[1];
+        }
+    });
+
     $('#movie_name').autocomplete({
         source: function(request, response) {
-            $.getJSON( "/find_movie", {
+            $.getJSON( APPLICATION_ROOT + "find_movie", {
                 term: request.term
             }, function(data, textStatus, jqXHR) {
                 response($.grep(data, function(elem, index) {
@@ -69,7 +85,7 @@ $(function() {
                         .append($('<input>', {type: 'checkbox', name: 'movies[]', id: "movie_" + ui.item.id, value: ui.item.id, checked: 'checked'}).change(checkbox_change).click(stop_propagation))
                 )
                 .append($('<td>').append('0'))
-                .append($('<td>').append($('<a>', {href: '/movie/' + ui.item.id, class: 'movie_info'}).append('Info').click(movie_info)))
+                .append($('<td>').append($('<a>', {href: APPLICATION_ROOT + 'movie/' + ui.item.id, class: 'movie_info'}).append('Info').click(movie_info)))
                 .append($('<td>')
                         .append($('<label>', {for: 'movie_' + ui.item.id})
                                 .append(ui.item.value)
