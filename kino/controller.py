@@ -17,6 +17,8 @@ def before_request():
                 g.user = User(name=user)
                 db.session.add(g.user)
                 db.session.commit()
+        else:
+            return login()
     except AttributeError:
         return login()
 
