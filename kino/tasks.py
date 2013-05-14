@@ -14,7 +14,7 @@ mail = Mail(app)
 def calendar_events(url, event_name, days_in_future):
     "Get events from the calendar file at url up to days_in_future days ahead"
     events = []
-    fd = urlopen('test.ics')
+    fd = urlopen(url)
     cal = vobject.readComponents(fd.read())
     for component in cal:
         if component.name == "VCALENDAR":
