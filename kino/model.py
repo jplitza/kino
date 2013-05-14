@@ -2,7 +2,7 @@ from sqlalchemy import *
 from sqlalchemy.ext.associationproxy import association_proxy, _AssociationSet
 import operator
 
-from . import db, request
+from . import db
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,7 +47,6 @@ class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False, index=True)
-    #movie = db.Column(db.Integer, db.ForeignKey('MyVideos75.movie.id'), nullable=False, index=True)
     movie_id = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):

@@ -3,12 +3,12 @@ from datetime import datetime
 from operator import itemgetter
 import json
 
-from . import app
+from . import app, db
 from .model import *
 
 @app.before_request
 def before_request():
-    "Ensures that user is authenticated and fills some global variables"
+    """Ensures that user is authenticated and fills some global variables"""
     try:
         user = request.authorization.username
         if user:
@@ -40,6 +40,7 @@ def index():
 
 @app.route('/event/<int:id>')
 def event(id):
+    """Shows the voted movies for an event"""
     event = Event.query.filter_by(id=id).first()
     event.movies = {}
     voted_movies = [vote.movie for vote in Vote.query.filter_by(user=g.user, event=event)]
@@ -56,6 +57,7 @@ def event(id):
 
 @app.route('/find_movie')
 def find_film():
+    """Searches for movies using a partial movie name"""
     movies = Movie.query.filter(Movie.name.like('%%%s%%' % request.args['term'])).all()
     return Response(
         json.dumps([{'id': movie.id, 'value': movie.name + ' (' + movie.year + ')'} for movie in movies]),
@@ -66,11 +68,13 @@ def find_film():
 
 @app.route('/movie/<int:id>')
 def movie_info(id):
+    """Gives detailed information about a movie"""
     movie = Movie.query.filter_by(id=id).first()
     return jsonify(movie.serialize)
 
 @app.route('/vote', methods=['POST'])
 def vote():
+    """Votes for a set of movies for an event. Can update previous votes."""
     event_id = request.form['event_id']
     event = Event.query.filter_by(id=event_id).first()
     if event.date < datetime.now():
