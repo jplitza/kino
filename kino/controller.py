@@ -26,6 +26,7 @@ def before_request():
                     .filter_by(canceled=False) \
                     .filter(Event.date >= datetime.now()) \
                     .order_by(Event.date.asc())
+    g.now = datetime.now()
 
 @app.route('/login')
 def login():
@@ -72,6 +73,8 @@ def movie_info(id):
 def vote():
     event_id = request.form['event_id']
     event = Event.query.filter_by(id=event_id).first()
+    if event.date < datetime.now():
+        return render_template('error.html', errormsg='Voting for an event in the past isn\'t possible!')
     if event.canceled:
         return render_template('error.html', errormsg='Voting for a canceled event isn\'t possible!')
     votes = Vote.query.filter_by(user=g.user, event=event)

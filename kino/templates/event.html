@@ -11,7 +11,7 @@
 <table id="movies">
     <thead>
     <tr>
-        {% if not event.canceled %}<th></th>{% endif %}
+        {% if not event.canceled and event.date >= g.now %}<th></th>{% endif %}
         <th>#</th>
         <th></th>
         <th>Name</th>
@@ -20,14 +20,14 @@
     <tbody>
     {% for movie in event.movies %}
     <tr{% if movie.voted %} class="voted"{% endif %}>
-        {% if not event.canceled %}<td><input type="checkbox" name="movies[]" id="movie_{{movie.id}}" value="{{ movie.id }}"{% if movie.voted %} checked="checked"{% endif %}></td>{% endif %}
+        {% if not event.canceled and event.date >= g.now %}<td><input type="checkbox" name="movies[]" id="movie_{{movie.id}}" value="{{ movie.id }}"{% if movie.voted %} checked="checked"{% endif %}></td>{% endif %}
         <td>{{movie.count}}</td>
         <td><a href="{{ url_for('movie_info', id=movie.id) }}" class="movie_info">Info</a></td>
         <td><label for="movie_{{movie.id}}">{{ movie.name|e }} ({{ movie.year }})</label></td>
     </tr>
     {% endfor %}
     </tbody>
-    {% if not event.canceled %}
+    {% if not event.canceled and event.date >= g.now %}
     <tfoot>
         <tr>
             <td><input type="checkbox" checked="checked" readonly="readonly" disabled="disabled" /></td>
@@ -36,7 +36,7 @@
     </tfoot>
     {% endif %}
 </table>
-{% if not event.canceled %}
+{% if not event.canceled and event.date >= g.now %}
 <input type="submit" value="Abstimmen">
 </form>
 {% endif %}
