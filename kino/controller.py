@@ -1,6 +1,6 @@
 from flask import render_template, make_response, request, redirect, url_for, Response, g, jsonify
 from datetime import datetime
-from operator import itemgetter
+from operator import attrgetter
 import json
 
 from . import app, db
@@ -51,12 +51,12 @@ def event(id):
     voted_movies = [vote.movie for vote in Vote.query.filter_by(user=g.user, event=event)]
     for vote in event.votes:
         if event.movies.has_key(vote.movie.id):
-            event.movies[vote.movie.id]['count'] += 1
+            event.movies[vote.movie.id].count += 1
         else:
-            event.movies[vote.movie.id] = vote.movie.serialize
-            event.movies[vote.movie.id]['voted'] = vote.movie in voted_movies
-            event.movies[vote.movie.id]['count'] = 1
-    event.movies = sorted(event.movies.values(), key=itemgetter('count'), reverse=True)
+            event.movies[vote.movie.id] = vote.movie
+            event.movies[vote.movie.id].voted = vote.movie in voted_movies
+            event.movies[vote.movie.id].count = 1
+    event.movies = sorted(event.movies.values(), key=attrgetter('count'), reverse=True)
     event.voted = len(voted_movies) > 0
     return render_template('event.html', event=event)
 
@@ -75,7 +75,27 @@ def find_film():
 def movie_info(id):
     """Gives detailed information about a movie"""
     movie = Movie.query.filter_by(id=id).first()
+    if not movie:
+        return jsonify({})
     return jsonify(movie.serialize)
+
+@app.route('/movie/next_winning')
+def next_winning_movie_info():
+    """Gives detailed information about the currently winning movie of the next event"""
+    event = g.events.first()
+    if not event:
+        return jsonify({})
+    if not event.votes:
+        return jsonify({})
+    event.movies = {}
+    for vote in event.votes:
+        if vote.movie.id in event.movies:
+            event.movies[vote.movie.id].count += 1
+        else:
+            event.movies[vote.movie.id] = vote.movie
+            event.movies[vote.movie.id].count = 1
+    event.movies = sorted(event.movies.values(), key=attrgetter('count'), reverse=True)
+    return movie_info(event.movies[0].id)
 
 @app.route('/vote', methods=['POST'])
 def vote():

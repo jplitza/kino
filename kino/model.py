@@ -25,7 +25,7 @@ class User(db.Model):
 
 class Movie(db.Model):
     __bind_key__ = 'xbmc'
-    __tablename__ = 'movie'
+    __tablename__ = 'movieview'
     id = db.Column('idMovie', db.Integer, primary_key=True)
     name = db.Column('c00', db.Text)
     description = db.Column('c01', db.Text)
@@ -33,13 +33,14 @@ class Movie(db.Model):
     imdb_id = db.Column('c09', db.Text)
     orig_name = db.Column('c16', db.Text)
     thumb = db.Column('c08', db.Text)
+    filename = db.Column('c22', db.Text)
 
     def __repr__(self):
         return '<Movie %r>' % self.name
 
     @property
     def serialize(self):
-        return dict((col, getattr(self, col)) for col in ('id', 'name', 'description', 'year', 'imdb_id', 'orig_name', 'thumb'))
+        return dict((col, getattr(self, col)) for col in ('id', 'name', 'description', 'year', 'imdb_id', 'orig_name', 'thumb', 'filename'))
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
