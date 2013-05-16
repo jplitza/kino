@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, session, Response, g, jsonify
+from flask import render_template, make_response, request, redirect, url_for, Response, g, jsonify
 from datetime import datetime
 from operator import itemgetter
 import json
@@ -42,6 +42,11 @@ def index():
 def event(id):
     """Shows the voted movies for an event"""
     event = Event.query.filter_by(id=id).first()
+    if not event:
+        return make_response(
+            render_template('error.html', errormsg='The event you requested was not found.'),
+            404
+        )
     event.movies = {}
     voted_movies = [vote.movie for vote in Vote.query.filter_by(user=g.user, event=event)]
     for vote in event.votes:
@@ -77,10 +82,21 @@ def vote():
     """Votes for a set of movies for an event. Can update previous votes."""
     event_id = request.form['event_id']
     event = Event.query.filter_by(id=event_id).first()
+    if not event:
+        return make_response(
+            render_template('error.html', errormsg='The event you voted for doesn\'t exist!'),
+            404
+        )
     if event.date < datetime.now():
-        return render_template('error.html', errormsg='Voting for an event in the past isn\'t possible!')
+        return make_response(
+            render_template('error.html', errormsg='Voting for an event in the past isn\'t possible!'),
+            403
+        )
     if event.canceled:
-        return render_template('error.html', errormsg='Voting for a canceled event isn\'t possible!')
+        return make_response(
+            render_template('error.html', errormsg='Voting for a canceled event isn\'t possible!'),
+            403
+        )
     votes = Vote.query.filter_by(user=g.user, event=event)
     voted_movies = dict((vote.movie.id, vote) for vote in votes)
     for movie_id in request.form.getlist('movies[]'):

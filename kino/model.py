@@ -10,7 +10,6 @@ class Event(db.Model):
     canceled = db.Column(db.Boolean, nullable=False, default=False)
     mailed = db.Column(db.Boolean, nullable=False, default=False)
     comment = db.Column(db.String(256))
-    votes = db.relationship("Vote", backref='event')
 #    movies = association_proxy('votes', 'movie')
     users = association_proxy('votes', 'user')
 
@@ -20,7 +19,6 @@ class Event(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True, index=True, nullable=False)
-    votes = db.relationship("Vote", backref='user')
 
     def __repr__(self):
         return '<User %r>' % self.name
@@ -48,8 +46,15 @@ class Vote(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False, index=True)
     movie_id = db.Column(db.Integer, nullable=False)
+    event = db.relationship("Event", backref=db.backref('votes', cascade='all, delete-orphan'))
+    user = db.relationship("User", backref=db.backref('votes', cascade='all, delete-orphan'))
 
     def __repr__(self):
         return '<Vote of %r for %r at %r>' % (self.user.name, self.movie.name, self.event.date.strftime("%Y-%m-%d %H:%M:%S"))
 
-Vote.movie = db.relationship("Movie", primaryjoin="Movie.id==Vote.movie_id", foreign_keys=[Vote.movie_id], backref="votes")
+Vote.movie = db.relationship(
+    "Movie",
+    primaryjoin="Movie.id==Vote.movie_id",
+    foreign_keys=[Vote.movie_id],
+    backref=db.backref("votes", cascade='all, delete-orphan')
+)

@@ -4,7 +4,7 @@
 <h2>{{ event.date.strftime('%A, %d.%m.%Y %H:%M') }}</h2>
 {% if event.canceled %}
 <p class="canceled">Dieses Event wurde abgesagt!</p>
-{% else %}
+{% elif event.date >= g.now %}
 <form action="{{ url_for('vote') }}" method="post">
 <input type="hidden" name="event_id" value="{{ event.id }}">
 {% endif %}
