@@ -82,7 +82,13 @@ def movie_info(id):
 @app.route('/movie/next_winning')
 def next_winning_movie_info():
     """Gives detailed information about the currently winning movie of the next event"""
-    event = g.events.first()
+    # to get the currently running event if some event is running, we ask for
+    # the next event after today's mitdnight
+    event = Event.query \
+                .filter_by(canceled=False) \
+                .filter(Event.date >= datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)) \
+                .order_by(Event.date.asc()) \
+                .first()
     if not event:
         return jsonify({})
     if not event.votes:
